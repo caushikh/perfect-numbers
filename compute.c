@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 	unsigned int i;
 	unsigned int sum = 0;
 	unsigned long nmod = 0;
-	int nsec;
-	unsigned int mod_per_sec;
+	float nsec;
+	float mod_per_sec;
 
 	if (!argc)
 	{
@@ -31,7 +31,10 @@ int main(int argc, char *argv[])
 		nmod++;
 	}
 	diff = clock() - start;
-	nsec = diff / CLOCKS_PER_SEC;
+
+	nsec = (float) (diff * 1000) / CLOCKS_PER_SEC;
+	printf("number of modulos is %ld\n", nmod);
+	printf("Number of milliseconds is %10f\n", nsec);
 	mod_per_sec = nmod / nsec;
 
 	if (sum == num)
@@ -40,6 +43,6 @@ int main(int argc, char *argv[])
 		
 		printf("%u is not a perfect number.\n", num);
 	
-	printf("Compute completed %d operations per second.\n", mod_per_sec);
+	printf("Compute completed %f operations per second.\n", mod_per_sec);
 	return 0;
 }
