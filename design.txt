@@ -1,0 +1,28 @@
+Design for Assignment 5
+
+Compute:
+- store temporary array storing perfect numbers found in current iteration of
+numbers
+- store modulus operations executed
+- store time taken to execute modulus operations
+- query manage for next range of values
+- send hostname on which it is being run to manage
+- send mod/sec to manage after completing computation
+- send number being tested to manage before determining whether it is a perfect
+number
+
+Manage:
+- store compute process hostnames
+- store mods per sec for each process
+- store all perfect numbers found
+- store current number being tested for each compute process
+- send number range to compute processes
+- send kill signals to compute processes
+
+Report:
+- print out perfect numbers found
+- print out numbers currently being tested by each compute process
+- print out hostnames of each compute process
+- retrieve perfect numbers found from manage process
+- retrieve numbers currently being tested from manage process
+- retrieve hostnames of each compute process from manage process
