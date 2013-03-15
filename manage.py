@@ -7,9 +7,10 @@ s.bind((HOST, PORT))
 s.listen(1)
 conn, addr = s.accept()
 print 'Connected by', addr
-while 1:
-	data = conn.recv(1024)
-	print data
-	if not data: break
-	conn.sendall(data)
+#while 1:
+data = conn.recv(1024)
+print float(data[:-1])
+#if not data: break
+send = 'I received the ' + data
+conn.sendall(send)
 conn.close()

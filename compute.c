@@ -31,6 +31,8 @@
 #define SERV_PORT 9878
 #define SERV_PORT_STR "9878"
 
+void cpbuf(char sendline[MAXLINE], char *buf);
+
 int main(int argc, char *argv[])
 {
 	/* compute perfect number variables */
@@ -46,6 +48,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in servaddr;
 	char sendline[MAXLINE];
 	char recvline[MAXLINE];
+	char *buf = '\0';
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -86,19 +89,38 @@ int main(int argc, char *argv[])
 	
 	printf("Compute completed %f operations per second.\n", mod_per_sec);
 
-	while (fgets(sendline, MAXLINE, stdin) != NULL)
-	{
+//	while (fgets(sendline, MAXLINE, stdin) != NULL)
+//	{
+		mod_per_sec = 4.6;
+		sprintf(&sendline, "%f", mod_per_sec);
+		fputs(sendline, stdout);
+		fputc('\n', stdout);
+	//	cpbuf(sendline, buf); 
 		bzero(recvline, MAXLINE);
 	
+		/* send to server */
 		write(sockfd, sendline, strlen(sendline) + 1);
 
+		/* receive from server */
 		if (read(sockfd, recvline, MAXLINE) == 0)
 		{
 			perror("problem reading");
 			exit(EXIT_FAILURE);
 		}
 		fputs(recvline, stdout);
-	}
+		fputc('\n', stdout);
+//	}
 
 	return 0;
+}
+
+void cpbuf(char sendline[MAXLINE], char *buf)
+{
+	int i;
+	int len = strlen(buf);
+	for (i = 0; i < len; i++)
+	{
+		sendline[i] = buf[i];
+	}
+	sendline[i] = '\0';
 }
