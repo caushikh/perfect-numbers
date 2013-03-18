@@ -1,5 +1,5 @@
 /* Author: Hari Caushik
- * Date Last Modified: 3/6/13
+ * Date Last Modified: 3/17/13
  * Description: Computes perfect numbers 
 */
 
@@ -118,21 +118,6 @@ int main(int argc, char *argv[])
 
 	/* one process monitors control socket, other does computation */
 
-#if 0
-	/* monitoring control - parent */
-	if (!fork())
-	{
-		/* got signal from manage */
-		if ((n = read(contfd, recvline, MAXLINE)) != 0)
-		{
-			/* stop computation and shut down cleanly */
-		}
-		else
-		{
-			/* server unexpectedly quit */
-		}
-	}
-#endif
 	compute = fork();
 
 	if (compute != 0)
@@ -145,15 +130,11 @@ int main(int argc, char *argv[])
 			len = strlen(recvline);
 			start = (uint32_t) atol(recvline);
 			end = (uint32_t) atol(recvline + len + 1);
-			printf("%s, %s\n", recvline, recvline + len + 1);
-			printf("start: %d\n", start);
-			printf("end: %d\n", end);
 			bzero(&perfect, sizeof(perfect));
 			k = 0;
 	
 			/* find perfect numbers and time it */
 			t = clock();
-			printf("begin time: %d\n", t);
 			sum = 0;
 			for (i = start; i <= end; i++)
 			{
@@ -164,26 +145,21 @@ int main(int argc, char *argv[])
 					nmod++;
 				}
 				
-				if (i == 6)
-					printf("6 sum = %d\n", sum);
 	
 				/* number is a perfect number */
 				if (sum == i)
 				{
 					perfect[k] = i;
-					printf("Perfect Number Found: %d\n", i);
 					k++;
 				}
 				sum = 0;
 			}
 			t = clock() - t;
-			printf("diff time: %d\n", t);
 			/* scale time and compute performance*/
 			nsec = (float) t / CLOCKS_PER_SEC;
 			mod_per_sec = nmod / nsec;
 	
-			/* send perfect numbers and performance characteristics to
-			  server */
+			/* send perfect numbers and performance characteristics to server */
 			n = sprintf(sendline, "%f;", mod_per_sec);
 			for (i = 0; (i < k) && (n < MAXLINE); i++)
 			{
@@ -192,22 +168,6 @@ int main(int argc, char *argv[])
 			write(sockfd, sendline, n);
 			bzero(recvline, MAXLINE);
 		
-			/* send to server */
-	
-	#if 0
-			write(sockfd, sendline, strlen(sendline) + 1);
-	
-	
-			/* receive from server */
-			if (read(sockfd, recvline, MAXLINE) == 0)
-			{
-				perror("problem reading");
-				exit(EXIT_FAILURE);
-			}
-			fputs(recvline, stdout);
-			fputc('\n', stdout);
-//		}
-	#endif
 		}
 	}
 	else
